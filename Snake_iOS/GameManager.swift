@@ -6,4 +6,14 @@
 //  Copyright © 2020 Alexandre Touzeau. All rights reserved.
 //
 
-import Foundation
+import SpriteKit
+
+class GameManager {
+    
+    //Organizes all of the active SpriteKit content
+    var scene: GameScene!
+    
+    init(scene: GameScene) {
+        self.scene = scene
+    }
+}
