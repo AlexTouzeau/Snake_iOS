@@ -49,8 +49,28 @@ class GameManager {
         for (node, x, y) in scene.gameArray {
            if contains(a: scene.playerPositions, v: (x,y)) {
                 node.fillColor = SKColor.white
+                if (x == scene.playerPositions[0].0 && y == scene.playerPositions[0].1) {
+                    node.fillColor = SKColor.green
+                }
             } else {
                 node.fillColor = SKColor.clear
+            
+                //Building a red wall to determine where snake will die
+                if x == 0 {
+                    node.fillColor = SKColor.red
+                }
+            
+                if y == 0 {
+                    node.fillColor = SKColor.red
+                }
+                
+                if y == 25 {
+                    node.fillColor = SKColor.red
+                }
+                
+                if x == 41 {
+                    node.fillColor = SKColor.red
+                }
                 
                 if Int(scene.posPoint.x) == y && Int(scene.posPoint.y) == x {
                     node.fillColor = SKColor.red
@@ -73,6 +93,7 @@ class GameManager {
                 updatePlayerPosition()
                 //changeSpeed()
                 checkScore()
+                checkGameOver()
             }
         }
     }
@@ -99,6 +120,10 @@ class GameManager {
             break
         case 3: //right
             xChange = 1
+            yChange = 0
+            break
+        case 0:
+            xChange = 0
             yChange = 0
             break
         case 4: //down
@@ -128,7 +153,9 @@ class GameManager {
     func swipe(d: Int) {
         if !(d == 2 && playerDirection == 4) && !(d == 4 && playerDirection == 2) {
             if !(d == 1 && playerDirection == 3) && !(d == 3 && playerDirection == 1) {
-                self.playerDirection = d
+                if playerDirection != 0 { //Disable move if snake is dead
+                    self.playerDirection = d
+                }
             }
         }
     }
@@ -151,8 +178,32 @@ class GameManager {
     }
     
     private func generatePoint() {
-        let randomX = CGFloat(Int.random(in: 1..<25))
-        let randomY = CGFloat(Int.random(in: 1..<41))
+        let randomX = CGFloat(Int.random(in: 2..<24))
+        let randomY = CGFloat(Int.random(in: 2..<40))
         scene.posPoint = CGPoint(x: randomX, y: randomY)
+    }
+    
+    private func checkGameOver() {
+        if scene.playerPositions.count > 0 {
+            var playerPositions = scene.playerPositions
+            let headOfSnake = scene.playerPositions[0]
+            let leftWall = 0 //x
+            let upWall = 0 //y
+            let rightWall = 25 //x
+            let bottomWall = 41 //y
+            
+            //We need to remove the head
+            playerPositions.remove(at: 0)
+            let collisionWithTail = contains(a: playerPositions, v: headOfSnake)
+            var collisionWithWall = (headOfSnake.0 == leftWall || headOfSnake.0 == bottomWall)
+            collisionWithWall = collisionWithWall || (headOfSnake.1 == upWall || headOfSnake.1 == rightWall)
+            
+            if collisionWithTail || collisionWithWall {
+                self.playerDirection = 0
+            }
+           
+            
+            
+        }
     }
 }
