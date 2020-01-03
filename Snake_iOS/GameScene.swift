@@ -20,7 +20,7 @@ class GameScene: SKScene {
     
     //Actual Game
     var currentScore: SKLabelNode!
-    var playerPosition: [(Int, Int)] = []
+    var playerPositions: [(Int, Int)] = []
     var gameBackground: SKShapeNode!
     //gameArray will allow us to track down all our cells - It takes a node and a position (x,y)
     var gameArray: [(node: SKShapeNode, x: Int, y: Int)] = []
@@ -32,8 +32,9 @@ class GameScene: SKScene {
         initializeGame()
     }
     
+    //Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
-        //Called before each frame is rendered
+        game.update(time: currentTime)
     }
     
     
@@ -72,6 +73,9 @@ class GameScene: SKScene {
             self.currentScore.isHidden = false
             //We display our checkboard
             self.gameBackground.isHidden = false
+            
+            //Start the real "playing" programmation
+            self.game.initGame()
         }
     }
     
