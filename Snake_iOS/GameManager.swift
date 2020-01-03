@@ -23,6 +23,9 @@ class GameManager {
     //By default our player is going left
     var playerDirection: Int = 1 //1 = left ; 2 = up ; 3 = right ; 4 = down
     
+    //Snake Size is at the begining 4
+    var currentSnakeSize = 4
+    
     init(scene: GameScene) {
         self.scene = scene
     }
@@ -65,7 +68,16 @@ class GameManager {
             if time >= nextTime! {
                 nextTime = time + timeExtension
                 updatePlayerPosition()
+                changeSpeed()
             }
+        }
+    }
+    
+    private func changeSpeed() {
+        let size = scene.playerPositions.count
+        if size > 0 && (self.currentSnakeSize != size) {
+            self.timeExtension = timeExtension / (Double(size) / 4)
+            self.currentSnakeSize = size
         }
     }
     
