@@ -20,10 +20,13 @@ class GameScene: SKScene {
     
     //Actual Game
     var currentScore: SKLabelNode!
-    var playerPositions: [(Int, Int)] = []
+    var playerPositions: [(Int, Int)] = [(10, 10), (11, 10), (12, 10)]
+    
     var gameBackground: SKShapeNode!
     //gameArray will allow us to track down all our cells - It takes a node and a position (x,y)
     var gameArray: [(node: SKShapeNode, x: Int, y: Int)] = []
+    //Position of the point to collect
+    var posPoint = CGPoint(x: 15, y: 29) //I put a random value here
     
     //Function called once our GameScene has loaded
     override func didMove(to view: SKView) {

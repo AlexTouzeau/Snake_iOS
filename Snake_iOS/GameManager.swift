@@ -18,7 +18,7 @@ class GameManager {
     var nextTime: Double?
     
     //How long we will wait between each call - determine the speed
-    var timeExtension: Double = 0.5
+    var timeExtension: Double = 0.2
     
     //By default our player is going left
     var playerDirection: Int = 1 //1 = left ; 2 = up ; 3 = right ; 4 = down
@@ -26,17 +26,16 @@ class GameManager {
     //Snake Size is at the begining 4
     var currentSnakeSize = 4
     
+    var playerScore: Int = 0
+    
+    
     init(scene: GameScene) {
         self.scene = scene
     }
     
     func initGame() {
-        //starting player position
-        scene.playerPositions.append((10, 10))
-        scene.playerPositions.append((11, 10))
-        scene.playerPositions.append((12, 10))
-        scene.playerPositions.append((13, 10))
         renderChange()
+        generatePoint()
     }
     
     //We need to define the "contains" function because the standard one seems not working with tuple
@@ -52,6 +51,10 @@ class GameManager {
                 node.fillColor = SKColor.white
             } else {
                 node.fillColor = SKColor.clear
+                
+                if Int(scene.posPoint.x) == y && Int(scene.posPoint.y) == x {
+                    node.fillColor = SKColor.red
+                }
             }
         }
     }
@@ -68,7 +71,8 @@ class GameManager {
             if time >= nextTime! {
                 nextTime = time + timeExtension
                 updatePlayerPosition()
-                changeSpeed()
+                //changeSpeed()
+                checkScore()
             }
         }
     }
@@ -127,5 +131,28 @@ class GameManager {
                 self.playerDirection = d
             }
         }
+    }
+    
+    private func checkScore() {
+        //(x, y) are here the head of our snake
+        let x = scene.playerPositions[0].0
+        let y = scene.playerPositions[0].1
+        //If the snake is eating the point
+        if Int(scene.posPoint.x) == y && Int(scene.posPoint.y) == x {
+            playerScore += 1
+            scene.currentScore.text = "Current Score: \(playerScore)"
+            generatePoint()
+            //Add a cell to our snake -> will be the last one position of the last cell
+            //To make the game faster we add multiple cells at a time
+            for _ in 1...5 {
+                scene.playerPositions.append(scene.playerPositions.last!)
+            }
+        }
+    }
+    
+    private func generatePoint() {
+        let randomX = CGFloat(Int.random(in: 1..<25))
+        let randomY = CGFloat(Int.random(in: 1..<41))
+        scene.posPoint = CGPoint(x: randomX, y: randomY)
     }
 }
