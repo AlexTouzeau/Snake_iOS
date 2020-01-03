@@ -30,11 +30,47 @@ class GameScene: SKScene {
         initializeMenu()
         game = GameManager(scene: self)
         initializeGame()
+        
+        //Handle the gesture from our player
+        let swipeRight:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeR))
+        swipeRight.direction = .right
+        view.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeL))
+        swipeLeft.direction = .left
+        view.addGestureRecognizer(swipeLeft)
+        
+        let swipeUp:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeU))
+        swipeUp.direction = .up
+        view.addGestureRecognizer(swipeUp)
+        
+        let swipeDown:UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(swipeD))
+        swipeDown.direction = .down
+        view.addGestureRecognizer(swipeDown)
+        
     }
     
     //Called before each frame is rendered
     override func update(_ currentTime: TimeInterval) {
         game.update(time: currentTime)
+    }
+    
+    //@objc create an objective-c function
+    //I did not manage to use the swipe gesture in an other way
+    @objc func swipeR() {
+        game.swipe(d: 3)
+    }
+    
+    @objc func swipeL() {
+        game.swipe(d: 1)
+    }
+    
+    @objc func swipeU() {
+        game.swipe(d: 2)
+    }
+    
+    @objc func swipeD() {
+        game.swipe(d: 4)
     }
     
     

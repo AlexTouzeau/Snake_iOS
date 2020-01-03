@@ -17,8 +17,8 @@ class GameManager {
     //This is the nextTime interval we will print a statement to the console
     var nextTime: Double?
     
-    //How long we will wait between each call
-    var timeExtension: Double = 1
+    //How long we will wait between each call - determine the speed
+    var timeExtension: Double = 0.5
     
     //By default our player is going left
     var playerDirection: Int = 1 //1 = left ; 2 = up ; 3 = right ; 4 = down
@@ -106,5 +106,14 @@ class GameManager {
         }
         //Need to render new positions of playerPositions
         renderChange()
+    }
+    
+    //This function is necessary because some move are impossible
+    func swipe(d: Int) {
+        if !(d == 2 && playerDirection == 4) && !(d == 4 && playerDirection == 2) {
+            if !(d == 1 && playerDirection == 3) && !(d == 3 && playerDirection == 1) {
+                self.playerDirection = d
+            }
+        }
     }
 }
