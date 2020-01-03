@@ -94,6 +94,7 @@ class GameManager {
                 //changeSpeed()
                 checkScore()
                 checkGameOver()
+                endGame()
             }
         }
     }
@@ -161,22 +162,24 @@ class GameManager {
     }
     
     private func checkScore() {
+        if scene.playerPositions.count > 0 {
         //(x, y) are here the head of our snake
-        let x = scene.playerPositions[0].0
-        let y = scene.playerPositions[0].1
-        //If the snake is eating the point
-        if Int(scene.posPoint.x) == y && Int(scene.posPoint.y) == x {
-            playerScore += 1
-            scene.currentScore.text = "Current Score: \(playerScore)"
-            generatePoint()
-            //Add a cell to our snake -> will be the last one position of the last cell
-            //To make the game faster we add multiple cells at a time
-            for _ in 1...5 {
-                scene.playerPositions.append(scene.playerPositions.last!)
+            let x = scene.playerPositions[0].0
+            let y = scene.playerPositions[0].1
+            //If the snake is eating the point
+            if Int(scene.posPoint.x) == y && Int(scene.posPoint.y) == x {
+                playerScore += 1
+                scene.currentScore.text = "Current Score: \(playerScore)"
+                generatePoint()
+                //Add a cell to our snake -> will be the last one position of the last cell
+                //To make the game faster we add multiple cells at a time
+                for _ in 1...5 {
+                    scene.playerPositions.append(scene.playerPositions.last!)
+                }
             }
         }
     }
-    
+        
     private func generatePoint() {
         let randomX = CGFloat(Int.random(in: 2..<24))
         let randomY = CGFloat(Int.random(in: 2..<40))
@@ -201,9 +204,38 @@ class GameManager {
             if collisionWithTail || collisionWithWall {
                 self.playerDirection = 0
             }
-           
-            
-            
         }
+    }
+    
+    private func endGame() {
+        if playerDirection == 0 && scene.playerPositions.count > 0 {
+            playerDirection = 4
+            scene.playerPositions.removeAll()
+            updateScore()
+            renderChange()
+            
+            //Back to Menu
+            scene.currentScore.run(SKAction.scale(to: 0, duration: 0.4)) {
+                self.scene.currentScore.isHidden = true
+            }
+            scene.gameBackground.run(SKAction.scale(to: 0, duration: 0.4)) {
+                self.scene.gameBackground.isHidden = true
+                self.scene.gameLogo.isHidden = false
+                self.scene.gameLogo.run(SKAction.move(to: CGPoint(x: 0, y: (self.scene.frame.size.height/2) - 300), duration: 0.4)) {
+                    self.scene.playButton.isHidden = false
+                    self.scene.playButton.run(SKAction.scale(to: 1, duration: 0.3))
+                    self.scene.bestScore.run(SKAction.move(to: CGPoint(x: 0, y: (self.scene.frame.size.height/2) - 590), duration: 0.4))
+                }
+            }
+        }
+    }
+    
+    private func updateScore() {
+        if playerScore > UserDefaults.standard.integer(forKey: "Best Score") {
+            UserDefaults.standard.set(playerScore, forKey: "Best Score")
+        }
+        playerScore = 0
+        scene.bestScore.text = "Best Score: \(UserDefaults.standard.integer(forKey: "Best Score"))"
+        scene.currentScore.text = "Current Score: 0"
     }
 }
