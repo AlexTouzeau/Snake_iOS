@@ -192,7 +192,7 @@ class GameScene: SKScene {
         bestScore.zPosition = 1
         bestScore.position = CGPoint(x: 0, y: copyrightLogo.position.y - 200)
         bestScore.fontSize = 100
-        bestScore.text = "Best Score: \(UserDefaults.standard.integer(forKey: "bestScore"))"
+        bestScore.text = "Best Score: \(UserDefaults.standard.integer(forKey: "Best Score"))"
         bestScore.fontColor = SKColor.white
         self.addChild(bestScore)
     
