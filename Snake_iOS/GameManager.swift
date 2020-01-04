@@ -20,8 +20,8 @@ class GameManager {
     //How long we will wait between each call - determine the speed
     var timeExtension: Double = 0.2
     
-    //By default our player is going left
-    var playerDirection: Int = 1 //1 = left ; 2 = up ; 3 = right ; 4 = down
+    //By default our player is going right
+    var playerDirection: Int = 3 //1 = left ; 2 = up ; 3 = right ; 4 = down
     
     //Snake Size is at the begining 4
     var currentSnakeSize = 4
